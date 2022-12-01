@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 
 import csv
 
-UPLOAD_FOLDER = '../csv/'
+UPLOAD_FOLDER = './csv/'
 ALLOWED_EXTENSIONS = {'csv'}
 
 db = SQLAlchemy()
