@@ -4,7 +4,7 @@ from logging.config import dictConfig
 from urllib.parse import urlparse
 
 import validators
-from flask import Flask, request, json, Response
+from flask import Flask, request, json, Response, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.exceptions import HTTPException
 from werkzeug.utils import secure_filename
@@ -74,11 +74,19 @@ def parse_csv(filename):
                 valid_link = Link(url=link)
                 db.session.add(valid_link)
                 db.session.commit()
-                data.append(f'{count}. Статус 201. ID: {valid_link.id}')
+                data.append({
+                    'Номер строки': count,
+                    'Статус': 201,
+                    'ID': valid_link.id
+                })
             else:
                 message = " ".join(url_not_valid_reason(link))
-                data.append(f'{count}. Статус 422. {message}')
-    return "\n".join(data)
+                data.append({
+                    'Номер строки': count,
+                    'Статус': 422,
+                    'Дополнительно': message
+                })
+    return jsonify(data)
 
 
 @app.route('/upload', methods=['POST'])
