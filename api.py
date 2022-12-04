@@ -69,16 +69,16 @@ def parse_csv(filename):
                 db.session.add(valid_link)
                 db.session.commit()
                 data.append({
-                    'Номер строки': count,
-                    'Статус': 201,
-                    'ID': valid_link.id
+                    'line_number': count,
+                    'status': 201,
+                    'id': valid_link.id
                 })
             else:
                 message = " ".join(url_not_valid_reason(link))
                 data.append({
-                    'Номер строки': count,
-                    'Статус': 422,
-                    'Дополнительно': message
+                    'line_number': count,
+                    'status': 422,
+                    'extra': message
                 })
     return jsonify(data)
 
