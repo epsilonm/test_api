@@ -32,15 +32,16 @@ Run API
 ## Примеры использования
 
 ### Передача URL-адреса через POST-запрос с помощью параметров
-Обрабатывает полученную с помощью POST-запроса URL-адрес.
+Обрабатывает полученный в теле POST-запроса URL-адрес.
 Записывает в лог данные о протоколе, доменном имени, пути,
 параметрах URL-адреса, а также домене системы управления репозиториями
 и названии репозитория при их наличии.
 #### Request
-Для передачи URL-адреса в теле запроса нужно указать поле 'link' а после вставить нужный адрес.
-`POST /parse_link?link=https://github.com/CosmoFox/css`
+Для обработки запроса нужно указать query-параметр link=link:
 
-`http://127.0.0.1:5000/parse_link?link=https://github.com/CosmoFox/css`
+`POST /parse_link/<url>?link=link`
+
+`http://127.0.0.1:5000/parse_link/https://github.com/CosmoFox/css?link=link`
 
 #### Response
 
@@ -49,17 +50,17 @@ Run API
     "message": "Ваша ссылка принята"
 }
 ```
-Сообщение, если в теле запроса отсутствует поле 'link':
+Если query-параметр задан неверно или не указан::
 
 #### Request
-`POST /parse_link?lin=https://github.com/CosmoFox/css`
+`POST /parse_link/https://github.com/CosmoFox/css?link=incorrect`
 
-`http://127.0.0.1:5000/parse_link?lin=https://github.com/CosmoFox/css`
+`http://127.0.0.1:5000/parse_link/https://github.com/CosmoFox/css?link=incorrect`
 
 #### Response
 ```
 {
-    "message": "Указаны неверные параметры запроса. Пожалуйста, начните запрос с ?link=<url>"
+    "message": "Указаны неверные query-параметры"
 }
 ```
 

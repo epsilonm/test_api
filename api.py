@@ -1,7 +1,7 @@
 import os
 import re
 from logging.config import dictConfig
-from urllib.parse import urlparse, parse_qs
+from urllib.parse import urlparse
 
 import validators
 from flask import Flask, request, json, jsonify
@@ -125,8 +125,8 @@ def upload_file():
     return parse_csv(filename)
 
 
-@app.route('/parse_link', methods=['POST'])
-def parse_link():
+@app.route('/parse_link/<path:url>', methods=['POST'])
+def parse_link(url):
     """
     Обрабатывает полученную с помощью POST-запроса URL-адрес.
     Записывает в лог данные о протоколе, доменном имени, пути,
@@ -136,19 +136,14 @@ def parse_link():
     user_message = {
             "message": "Ваша ссылка принята"
         }
-    query = parse_qs(urlparse(request.url).query)
-    params = "| ".join([f'{key} : {val} ' for key, val in query.items()])
-    if not request.args.get('link'):
-        user_message['message'] = (
-            'Указаны неверные параметры запроса.'
-            ' Пожалуйста, начните запрос с ?link=<url>'
-            )
-        app.logger.info(f'Неверные параметры запроса: {params}')
+    if not request.args.get('link') == 'link':
+        user_message['message'] = 'Указаны неверные query-параметры'
+        app.logger.info(f"{user_message['message']}: {request.url}")
     else:
-        body = urlparse(request.args.get('link'))._asdict()
+        body = urlparse(url)._asdict()
         message = (
             f"Протокол: {body['scheme']} | Домен: {body[ 'netloc']} | "
-            f"Путь: {body['path']} | Параметры: {params}"
+            f"Путь: {body['path']} | Параметры: {url}"
         )
         if body['netloc'] == 'github.com' or body['netloc'] == 'gitlab.com':
             body['git'] = body['netloc']
