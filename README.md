@@ -9,9 +9,9 @@ API для парсинга URL-адресов.
 Необходим Python версии 3.8.
 Клонируйте репозиторий и введите в командной строке:
 
-`git clone git@github.com:epsilonm/api_final_yatube.git`
+`git clone git@github.com:epsilonm/test_api.git`
 
-`cd api_final_yatube`
+`cd test_api`
 
 Активируйте виртуальное окружение.
 
@@ -27,25 +27,40 @@ API для парсинга URL-адресов.
 
 Run API
 
-`python3 api.py`
+`flask --app api --debug run`
 
 ## Примеры использования
 
-### Передача URL-адреса через GET-запрос с помощью параметров
-Обрабатывает полученную с помощью GET-запроса URL-адрес.
+### Передача URL-адреса через POST-запрос с помощью параметров
+Обрабатывает полученную с помощью POST-запроса URL-адрес.
 Записывает в лог данные о протоколе, доменном имени, пути,
 параметрах URL-адреса, а также домене системы управления репозиториями
 и названии репозитория при их наличии.
 #### Request
+Для передачи URL-адреса в теле запроса нужно указать поле 'link' а после вставить нужный адрес.
+`POST /parse_link?link=https://github.com/CosmoFox/css`
 
-`GET /parse_link?https://github.com/CosmoFox/css`
-
-`http://127.0.0.1:5000/parse_link?https://github.com/CosmoFox/css`
+`http://127.0.0.1:5000/parse_link?link=https://github.com/CosmoFox/css`
 
 #### Response
 
 ```
-HTTP status: 200
+{
+    "message": "Ваша ссылка принята"
+}
+```
+Сообщение, если в теле запроса отсутствует поле 'link':
+
+#### Request
+`POST /parse_link?lin=https://github.com/CosmoFox/css`
+
+`http://127.0.0.1:5000/parse_link?lin=https://github.com/CosmoFox/css`
+
+#### Response
+```
+{
+    "message": "Указаны неверные параметры запроса. Пожалуйста, начните запрос с ?link=<url>"
+}
 ```
 
 ### Загрузка .csv файла через POST-запрос
